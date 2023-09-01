@@ -1,2 +1,66 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+import java.util.Scanner;
+
+public class Automata {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        boolean continuar = true;
+        while (continuar) {
+            System.out.print("Ingresa una cadena: ");
+            String input = scanner.nextLine();
+
+            if (verificarCadena(input)) {
+                System.out.println("Cadena valida.");
+            } else {
+                System.out.println("Cadena invalida.");
+            }
+
+            System.out.print("Quieres ingresar otra produccion? (s/n): ");
+            String respuesta = scanner.nextLine();
+            if (!respuesta.equalsIgnoreCase("s")) {
+                continuar = false;
+            }
+        }
+
+        System.out.println("Hasta luego!");
+    }
+
+    public static boolean verificarCadena(String cadena) {
+        int estado = 0; // Estado inicial q0
+
+        for (int i = 0; i < cadena.length(); i++) {
+            char simbolo = cadena.charAt(i);
+
+            switch (estado) {
+                case 0:
+                    if (simbolo == 'a') {
+                        estado = 1; // Transicion a q1
+                    } else {
+                        return false; // Caracter invalido en q0
+                    }
+                    break;
+                case 1:
+                    if (simbolo == 'b') {
+                        estado = 2; // Transicion a q2
+                    } else if (simbolo == 'a') {
+                        estado = 1; // Permanece en q1
+                    } else {
+                        return false; // Caracter invalido en q1
+                    }
+                    break;
+                case 2:
+                    if (simbolo == 'a') {
+                        estado = 2; // Permanece en q2
+                    } else {
+                        return false; // Caracter invalido en q2
+                    }
+                    break;
+                default:
+                    return false; // Estado invalido
+            }
+        }
+
+        return estado == 2; // Verificar si terminamos en el estado final q2
+    }
+
